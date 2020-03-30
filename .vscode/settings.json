@@ -1,0 +1,18 @@
+{
+    "turboConsoleLog.addSemicolonInTheEnd": true,
+    "turboConsoleLog.logMessagePrefix": "RD",
+    "turboConsoleLog.quote": "`",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "eslint.alwaysShowStatus": true,
+    "vetur.format.defaultFormatter.html": "prettier",
+    "vetur.format.defaultFormatter.css": "prettier",
+}
