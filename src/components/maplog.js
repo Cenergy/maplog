@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable class-methods-use-this */
 import mapboxUtils from 'mapbox-gl-utils';
-import locateService from './locate/locateService';
+import locateService from './locate0/locateService';
 import drawableService from './draw/drawableService';
 import dataService from '../services/dataService';
 // import layerService from '../services/layerService';
