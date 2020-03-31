@@ -1,46 +1,26 @@
 import drawable from './drawable';
-import { HasCoordinate, HasCoordinates } from '../../mixin';
+import { HasCoordinate } from '../../mixin';
 
-export class ThreeJsModelDrawable extends drawable {
+export default class ThreeJsModelDrawable extends drawable {
   /**
-	 * 构造模型
-	 * @param {object} option 选项
-	 * @example
-	 * const option = {
-	 *   modelType: 'protectTarget|pollutionSource|..',
-	 *   coordinate: [113, 26],
-	 *   parameters: {
-	 *     modelScale: 2,
-	 *   },
-	 * };
-	 *
-	 * // execute
-	 * const tjmd = new ThreeJsModelDrawable(option)
-	 */
+   * 构造模型
+   * @param {object} option 选项
+   * @example
+   * const option = {
+   *   modelUrl: 'http://xxxx/models/file/file.gltf',
+   *   coordinate:[113.958263, 22.559213],
+   * };
+   *
+   * // execute
+   * const tjmpmd = new ThreeJsModelDrawable(option)
+   */
   constructor(option) {
     super(option);
     Object.assign(this, new HasCoordinate(option));
-  }
-}
-
-export class ThreeJsMultiPointModelDrawable extends drawable {
-  /**
-	 * 构造模型
-	 * @param {object} option 选项
-	 * @example
-	 * const option = {
-	 *   modelType: 'protectTarget|pollutionSource',
-	 *   coordinates: [[113, 26],[114,27]],
-	 *   parameters: {
-	 *     modelScale: 2,
-	 *   },
-	 * };
-	 *
-	 * // execute
-	 * const tjmpmd = new ThreeJsMultiPointModelDrawable(option)
-	 */
-  constructor(option) {
-    super(option);
-    Object.assign(this, new HasCoordinates(option));
+    const { modelUrl, modelAltitude, scale } = option;
+    this.modelUrl = modelUrl || 'http://10.8.9.64:3038/models/file/file/';
+    this.modelAltitude = modelAltitude || 0;
+    this.scale = scale || 100;
+    this._modelTemplate = null;
   }
 }

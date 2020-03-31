@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 export class HasCoordinate {
   constructor({ coordinate }) {
     this.coordinate = coordinate;

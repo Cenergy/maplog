@@ -1,77 +1,169 @@
+// @ts-nocheck
 /* eslint-disable class-methods-use-this */
+import mapboxUtils from 'mapbox-gl-utils';
+import locateService from './locate/locateService';
 import drawableService from './draw/drawableService';
 import dataService from '../services/dataService';
 import layerService from '../services/layerService';
-import navagationService from '../services/navagationService';
+import navigationService from '../services/navigationService';
+import buildingService from './buildings/buildingService';
+import gpsDataService from '../services/gpsDataService';
+import MapSdkExtension from './mapSdkExtension';
+import zoomShowController from './zoomShowController';
+import modelService from '../services/modelService';
+import shadeService from '../services/shadeService';
+import plotService from '../services/plotService';
+import layerZIndexHelper from './layerZIndexHelper';
 
 export default class MapSDK extends EventTarget {
   constructor() {
     super();
     this._map = null;
+    this.sdkExtension = new MapSdkExtension();
   }
 
   /**
-	 *
-	 * @param {object} option 初始化选项
-	 * @param {mapboxgl.Map} option.map mapboxgl-map
-	 * @returns {void}
-	 */
+   *
+   * @param {object} option 初始化选项
+   * @param {mapboxgl.Map} option.map mapboxgl-map
+   * @returns {void}
+   */
   init(option) {
+    console.log('rd: MapSDK -> init -> option', option);
     const { map } = option;
     this._map = map;
     this.initCore(option);
   }
 
   async initCore(option) {
-    console.info('rd: MapSDK start init');
-    const { map } = option;
+    console.info('rd: MapSDK start init...');
+    const map = this._map;
+    mapboxUtils.init(map);
+    const mapSdk = this;
+    zoomShowController.init(option);
+    layerZIndexHelper.init(map);
     await dataService.init(option);
-    await layerService.init(dataService);
-    await navagationService.init();
-    drawableService.init({ map, layerService, navagationService });
-    console.info('rd: MapSDK end init');
+    await buildingService.init({ dataService, map });
+    await gpsDataService.init(option);
+    await layerService.init({ dataService, mapSdk });
+    await plotService.init({ mapSdk, navigationService });
+    this.sdkExtension.init({ dataService, navigationService });
+    locateService.init(option);
+    drawableService.init({
+      map,
+      layerService,
+      dataService,
+    });
+
+    if (!this._map.loaded()) {
+      this._map.on('load', () => {
+        this.onInited();
+      });
+    } else {
+      this.onInited();
+    }
+  }
+
+  async onInited() {
+    await modelService.init({ map: this._map });
+    await shadeService.init({ map: this._map });
+    console.info('rd: MapSDK end init...');
     this.dispatchEvent(new Event('initialized'));
   }
 
   // #region Map Basics
 
   /**
-	 * 获取地图实例
-	 */
+   * 获取地图实例
+   */
   get map() {
     return this._map;
   }
 
   /**
-	 * 定位地图：支持mapgl的4种飞行方式
-	 * @param {object} option 定位功能描述选项
-	 * @returns {void}
-	 * @example
-	 * const option = {
-	 *  locateType: 'fly|jumpTo|..',
-	 *  option: {
-	 *    center: target,
-	 *    zoom: 9,
-	 *    bearing: 0,
-	 *    speed: 0.2,
-	 *    curve: 1,
-	 *    easing: function(t) {
-	 *      return t;
-	 *    },
-	 *  },
-	 * };
-	 * // execute
-	 * locate(option)
-	 */
+   * 定位地图：支持mapgl的4种飞行方式
+   * @param {object} option 定位功能描述选项
+   * @returns {void}
+   * @example
+   * const option = {
+   *  locateType: 'flyTo|jumpTo|..',
+   *  option: {
+   *    center: target,
+   *    zoom: 9,
+   *    bearing: 0,
+   *    speed: 0.2,
+   *    curve: 1,
+   *    easing: function(t) {
+   *      return t;
+   *    },
+   *  },
+   * };
+   * // execute
+   * locate(option)
+   */
   locate(option) {
     console.log('rd: MapSDK -> locate -> option', option);
+    locateService.locate(option);
   }
 
-  // 地图轮播
-  // Jump to a series of locations
-  // Play map locations as a slideshow
+  /**
+   * 地图轮播
+   * @param {object} options 轮播方式及对象
+   * @returns {void}
+   * @example
+   * const options = {
+   *  locateType: 'flyTo|jumpTo|..',
+   *  features: [
+   *   {
+   *     name: 'point1',
+   *     address: 'xx大厦1',
+   *     coordinates: [113.25, 25.22],
+   *   },
+   *   {
+   *     name: 'point2',
+   *     address: 'xx大厦2',
+   *     coordinates: [114.65, 22.78],
+   *   }],
+   * };
+   * // execute
+   * slider(options)
+   */
   slider(options) {
     console.log('rd: MapSDK -> slider -> options', options);
+    locateService.slider(options);
+  }
+
+  /**
+   * 围绕一个点旋转
+   * @param {object} options 旋转功能描述选项
+   * @returns {void}
+   * @example
+   * const options = {
+   *  bearing: 45,
+   *  option: {
+   *    duration: 10,
+   *    offset: [0.5,0.5],
+   *    animate: true,
+   *    easing: function(t) {
+   *      return t;
+   *    },
+   *  },
+   * };
+   * // execute
+   * sliderAround(options)
+   */
+  sliderAround(options) {
+    console.log('rd: MapSDK -> sliderAround -> option', options);
+    locateService.sliderAround(options);
+  }
+
+  /**
+   * 停止地图绕点旋转行为
+   * @returns {void}
+   */
+  stopSliderAround() {
+    console.log('rd: MapSDK -> stopSliderAround ');
+    locateService.stopSliderAround();
   }
 
   // #endregion
@@ -79,105 +171,61 @@ export default class MapSDK extends EventTarget {
   // #region Buildings
 
   // 加载建筑 options:暂定url
-  loadBuilding(options) {
+  loadBuilding(options = {}) {
     console.log('rd: MapSDK -> loadBuilding -> options', options);
+    return buildingService.loadBuilding(options);
   }
 
   // 显示
   showBuilding() {
-    console.log('rd: MapSDK -> showBuilding -> showBuilding');
+    console.log('rd: showBuilding');
+    buildingService.showBuilding();
   }
 
   // 隐藏
   hideBuilding() {
-    console.log('rd: MapSDK -> hideBuilding -> hideBuilding');
+    console.log('rd: hideBuilding');
+    buildingService.hideBuilding();
   }
 
   // 高亮
   hightLightBuildings(options) {
-    console.log('rd: MapSDK -> hightLightBuildings -> options', options);
+    console.log('rd: hightLightBuildings -> options', options);
+    buildingService.hightLightBuildings(options);
   }
 
   // 移除高亮
-  removeHightLightBuildings(options) {
-    console.log('rd: MapSDK -> removeHightLightBuildings -> options', options);
+  removeHightLightBuildings() {
+    console.log('rd: removeHightLightBuildings');
+    buildingService.removeHightLightBuildings();
   }
 
   // #endregion
 
   // #region Layers
 
-  // 初始化图层 options:需传递足够的图层信息，如图层树结构、图层点位数据url
-  initLayers(options) {
-    const optionsExample = {
-      layers: [
-        {
-          name: 'phone',
-          typeId: '4004',
-        },
-        {
-          name: 'camera',
-          typeId: '4004',
-        },
-        {
-          name: 'mmt',
-          typeId: '4004',
-        },
-        {
-          name: 'event',
-          typeId: '4004',
-        },
-        {
-          name: 'gps01',
-          typeId: '4004',
-        },
-        {
-          name: 'goodType01',
-          typeId: '4004',
-        },
-        {
-          name: 'facilityType01',
-          typeId: '4004',
-        },
-      ],
-      goodUrl: '.geojson',
-      phoneUrl: '.geojson',
-    };
-    console.log('rd: MapSDK -> initLayers -> options', options, optionsExample);
+  async initLayers() {
+    console.log('rd: MapSDK -> initLayers');
+    await layerService.initLayers();
   }
 
-  // 过去所有的图层 需提供相应的类来描述图层
+  // 获取所有的图层 需提供相应的类来描述图层
   getAllLayers() {
     console.log('rd: MapSDK -> getAllLayers -> getAllLayers');
+    const layers = layerService.getAllLayers();
+    return layers;
   }
 
   // 快速显示图层
   showLayers(layerIds) {
     console.log('rd: MapSDK -> showLayers -> layerIds', layerIds);
+    layerService.showLayers(layerIds);
   }
 
   // 快速隐藏图层
   hideLayers(layerIds) {
     console.log('rd: MapSDK -> hideLayers -> layerIds', layerIds);
-  }
-
-  // #endregion
-
-  // #region Navigation
-
-  // 获取导航路径
-  navigate(options) {
-    console.log('rd: MapSDK -> navigate -> options', options);
-  }
-
-  // 绘制导航路径
-  drawNavigate(options) {
-    console.log('rd: MapSDK -> drawNavigate -> options', options);
-  }
-
-  // 移除导航路径
-  removeNavigate(id) {
-    console.log('rd: MapSDK -> removeNavigate -> id', id);
+    layerService.hideLayers(layerIds);
   }
 
   // #endregion
@@ -192,7 +240,7 @@ export default class MapSDK extends EventTarget {
 
   // 更新地图元素
   updateDrawable(drawable) {
-    console.log('rd: MapSDK -> updateDrawable -> drawable', drawable);
+    // console.log('rd: MapSDK -> updateDrawable -> drawable', drawable);
     return drawableService.update(drawable);
   }
 
@@ -201,6 +249,5 @@ export default class MapSDK extends EventTarget {
     console.log('rd: MapSDK -> removeDrawable -> drawableId', drawableId);
     return drawableService.remove(drawableId);
   }
-
   // #endregion
 }

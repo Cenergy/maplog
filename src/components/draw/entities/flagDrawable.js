@@ -6,31 +6,29 @@ import { HasCoordinate } from '../../mixin';
  * @param {object} option 选项
  * @example
  * const option = {
- *   name:'image',
  *   coordinates: [113.87572, 22.586208],
- *   imagePath:'http://10.8.9.78:3038/images/back.png',
  *   width:100,
  *   height:200,
- *   isShow:false,
  *   minZoom:10,
- *   maxZoom:19
+ *   maxZoom:19,
+ *   title:"hello"
  * };
  *
  * // execute
- * const imageDrawable = new ImageDrawable(option)
+ * const flagDrawable = new FlagDrawable(option)
  */
-class ImageDrawable extends Drawable {
+class FlagDrawable extends Drawable {
   constructor(option) {
     super(option);
     Object.assign(this, new HasCoordinate(option));
     const {
-      imagePath, width = 50, height = 100, title = '',
+      width = 100, height = 160, title = '', color = '#9d0c00',
     } = option;
-    this._imagePath = imagePath;
     this.title = title;
     this._width = width;
     this._height = height;
+    this._color = color;
   }
 }
 
-export default ImageDrawable;
+export default FlagDrawable;

@@ -1,13 +1,10 @@
-import uuidv1 from 'uuid/v1';
+import ZoomShowElement from '../../zoomShowElement';
 
-class drawable {
-  constructor({ name, minZoom, maxZoom }) {
-    this._id = uuidv1();
-    console.log('rd: drawable -> constructor -> _id', this._id);
-    this._name = name;
-    this._minZoom = minZoom;
-    this._maxZoom = maxZoom;
+class Drawable extends ZoomShowElement {
+  constructor(option) {
+    super(option);
+    this._option = option;
   }
 }
 
-export default drawable;
+export default Drawable;
