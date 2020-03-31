@@ -1,6 +1,7 @@
 class DataService {
-  async init() {
-    this.baseUrl = `/map/api/`;
+  async init(option) {
+    const { dataServer } = option;
+    this.dataServer = dataServer;
   }
 }
 

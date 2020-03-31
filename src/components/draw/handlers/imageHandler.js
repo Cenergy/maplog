@@ -1,8 +1,8 @@
 import Pubsub from 'pubsub-js';
 import mapboxgl from 'mapbox-gl';
 import HandlerBase from './handlerBase';
-import eventAggregator from '../../pubsubRelated/mapEventAggregator';
-import { IMAGE_DRAWABLE_TYPE } from '../../drawableTypeKey';
+// import eventAggregator from '../../pubsubRelated/mapEventAggregator';
+// import { IMAGE_DRAWABLE_TYPE } from '../../drawableTypeKey';
 
 export default class ImageHandler extends HandlerBase {
     _addCore(drawable) {
@@ -73,11 +73,11 @@ export default class ImageHandler extends HandlerBase {
             marker.setPopup(popup);
         }
 
-        const option = { dataSource: { drawable, marker }, type: IMAGE_DRAWABLE_TYPE };
-        el.addEventListener('click', function publishClickEvent() {
-            const topic = eventAggregator.getAllEventTopics().MapClicked;
-            eventAggregator.publish(topic, option);
-        });
+        // const option = { dataSource: { drawable, marker }, type: IMAGE_DRAWABLE_TYPE };
+        // el.addEventListener('click', function publishClickEvent() {
+        //     const topic = eventAggregator.getAllEventTopics().MapClicked;
+        //     eventAggregator.publish(topic, option);
+        // });
         return marker;
     }
 
