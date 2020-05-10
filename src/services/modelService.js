@@ -1,4 +1,4 @@
-import { Threebox, THREE } from 'threebox-map';
+import { Threebox, THREE } from 'threebox';
 // @ts-ignore
 window.Threebox = Threebox;
 // @ts-ignore
