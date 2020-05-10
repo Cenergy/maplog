@@ -3,6 +3,9 @@ import ThreeJsModelHandler from './handlers/modelHandler';
 import ImageDrawable from './entities/imageDrawable';
 import ImageHandler from './handlers/imageHandler';
 
+import SpriteImageDrawable from './entities/spriteImageDrawable';
+import SpriteImageHandler from './handlers/spriteImageHandler';
+
 const handlerMaps = new Map();
 const drawables = new Map();
 
@@ -11,10 +14,12 @@ function init(option) {
     const tjmpm = new ThreeJsModelHandler(option);
 
     const imageHandler = new ImageHandler(option);
+    const spriteImageHandler = new SpriteImageHandler(option);
 
     handlerMaps.set(ThreeJsModelDrawable.prototype, tjmpm);
 
     handlerMaps.set(ImageDrawable.prototype, imageHandler);
+    handlerMaps.set(SpriteImageDrawable.prototype, spriteImageHandler);
 }
 
 function validateDrawableType(drawable) {
