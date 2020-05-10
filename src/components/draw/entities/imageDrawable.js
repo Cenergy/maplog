@@ -7,7 +7,7 @@ import { HasCoordinate } from '../../mixin';
  * @example
  * const option = {
  *   name:'image',
- *   coordinates: [113.87572, 22.586208],
+ *   coordinate: [113.87572, 22.586208],
  *   imagePath:'http://10.8.9.78:3038/images/back.png',
  *   width:100,
  *   height:200,
@@ -35,7 +35,9 @@ class ImageDrawable extends Drawable {
             offset = [0, 0],
             userData = {},
             length,
+            element,
         } = option;
+        this.element=element
         this._imagePath = imagePath;
         this.title = title;
         this._width = width;
