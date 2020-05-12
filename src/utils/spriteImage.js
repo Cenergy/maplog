@@ -39,38 +39,40 @@ class SpriteImageWrapper {
     }
 }
 
-export default class SpriteImage{
-    constructor(options){
-        const { map,size = 100, img, row = 1, column = 1 } = options;
-        this.width=size;
-        this.img=img;
-        this.row=row;
-        this.column=column;
-        this.height=size;
-        this.map=map;
-        this.data=new Uint8Array(size * size * 4);
+export default class SpriteImage {
+    constructor(options) {
+        const { map, size = 100, img, row = 1, column = 1 } = options;
+        this.width = size;
+        this.img = img;
+        this.row = row;
+        this.column = column;
+        this.height = size;
+        this.map = map;
+        this.data = new Uint8Array(size * size * 4);
     }
 
-    onAdd(){
+    onAdd() {
         const canvas = document.createElement('canvas');
         canvas.width = this.width;
         canvas.height = this.height;
         this.context = canvas.getContext('2d');
         const image = new Image();
+        image.onload = () => {
+            const sprite = new SpriteImageWrapper({
+                canvas,
+                image,
+                numberOfFrames: 10,
+                ticksPerFrame: 0,
+                row: this.row,
+                column: this.column,
+                x: 0,
+                y: 0,
+            });    
+            this.sprite = sprite;
+            this.map.triggerRepaint();
+        };
         image.src = this.img;
-
         this.image = image;
-        const sprite = new SpriteImageWrapper({
-            canvas,
-            image,
-            numberOfFrames: 10,
-            ticksPerFrame: 0,
-            row:this.row,
-            column:this.column,
-            x: 0,
-            y: 0,
-        });
-        this.sprite = sprite;
     }
 
     render() {
