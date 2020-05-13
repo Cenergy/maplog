@@ -49,6 +49,7 @@ export default class SpriteImage {
         this.height = size;
         this.map = map;
         this.data = new Uint8Array(size * size * 4);
+        this.sprite = null;
     }
 
     onAdd() {
@@ -67,7 +68,7 @@ export default class SpriteImage {
                 column: this.column,
                 x: 0,
                 y: 0,
-            });    
+            });
             this.sprite = sprite;
             this.map.triggerRepaint();
         };
@@ -78,8 +79,10 @@ export default class SpriteImage {
     render() {
         const { context } = this;
         context.clearRect(0, 0, this.width, this.height);
-        this.sprite.update();
-        this.sprite.render();
+        if (this.sprite) {
+            this.sprite.update();
+            this.sprite.render();
+        }
         this.data = context.getImageData(0, 0, this.width, this.height).data;
         this.map.triggerRepaint();
         return true;
