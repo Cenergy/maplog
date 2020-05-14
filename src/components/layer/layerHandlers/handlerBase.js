@@ -1,6 +1,6 @@
 export default class LayerHandlerBase {
-  constructor({ mapSdk }) {
-    this._mapSdk = mapSdk;
+  constructor({ maplog }) {
+    this._maplog = maplog;
   }
 
   // eslint-disable-next-line class-methods-use-this

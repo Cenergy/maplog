@@ -12,11 +12,11 @@ const drawables = new Map();
 function init(option) {
     console.log('rd: init -> option', option);
     const tjmpm = new ThreeJsModelHandler(option);
+    handlerMaps.set(ThreeJsModelDrawable.prototype, tjmpm);
 
     const imageHandler = new ImageHandler(option);
     const spriteImageHandler = new SpriteImageHandler(option);
 
-    handlerMaps.set(ThreeJsModelDrawable.prototype, tjmpm);
 
     handlerMaps.set(ImageDrawable.prototype, imageHandler);
     handlerMaps.set(SpriteImageDrawable.prototype, spriteImageHandler);

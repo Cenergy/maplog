@@ -62,7 +62,7 @@ class GpsLayerItem extends LayerItem {
 
     _animations() {
         if (this._isShow && this._gpsDrawables.length > 0) {
-            this._animationCount = this._animationCount + 1;
+            this._animationCount += 1;
             for (let index = 0; index < this._gpsDrawables.length; index += 1) {
                 const drawable = this._gpsDrawables[index];
                 if (this._animationCount % 2 === 0) {

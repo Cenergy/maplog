@@ -4,7 +4,7 @@ import mapboxUtils from 'mapbox-gl-utils';
 import locateService from './locate0/locateService';
 import drawableService from './draw/drawableService';
 import dataService from '../services/dataService';
-// import layerService from '../services/layerService';
+import layerService from '../services/layerService';
 
 import buildingService from './buildings/buildingService';
 
@@ -36,13 +36,13 @@ export default class Maplog extends EventTarget {
         console.info('rd: MapSDK start init...');
         const map = this._map;
         mapboxUtils.init(map);
-        // const mapSdk = this;
+        const maplog = this;
         zoomShowController.init(option);
         // layerZIndexHelper.init(map);
         await dataService.init(option);
         await buildingService.init({ dataService, map });
         // await gpsDataService.init(option);
-        // await layerService.init({ dataService, mapSdk });
+        await layerService.init({ dataService, maplog });
         // await plotService.init({ mapSdk, navigationService });
         // this.sdkExtension.init({ dataService, navigationService });
         locateService.init(option);
@@ -218,4 +218,33 @@ export default class Maplog extends EventTarget {
         return drawableService.remove(drawableId);
     }
     // #endregion
+
+    // #region Layers
+
+    async initLayers(option) {
+        console.log('rd: MapSDK -> initLayers');
+        await layerService.initLayers(option);
+    }
+
+    // 获取所有的图层 需提供相应的类来描述图层
+    getAllLayers() {
+        // console.log('rd: MapSDK -> getAllLayers -> getAllLayers');
+        const layers = layerService.getAllLayers();
+        return layers;
+    }
+
+    // 快速显示图层
+    showLayers(layerIds) {
+        // console.log('rd: MapSDK -> showLayers -> layerIds', layerIds);
+        layerService.showLayers(layerIds);
+    }
+
+    // 快速隐藏图层
+    hideLayers(layerIds) {
+        // console.log('rd: MapSDK -> hideLayers -> layerIds', layerIds);
+        layerService.hideLayers(layerIds);
+    }
+
+    // #endregion
+
 }
