@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // eslint-disable-next-line max-classes-per-file
 import find from 'lodash/find';
 import isEqual from 'lodash/isEqual';
@@ -118,8 +119,6 @@ export default class PointLayerHandler extends LayerHandlerBase {
             const { TypeID } = f.properties;
             return showLayerIds.includes(TypeID);
         });
-
-        console.log(`RD: _getDatas -> datas`, datas);
         return datas;
     }
 
