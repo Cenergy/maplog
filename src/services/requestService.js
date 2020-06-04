@@ -1,11 +1,11 @@
 import httpService from './httpService';
-import eventsJson from '../asserts/events.json';
-import layersJson from '../asserts/layers.json';
-import facilitiesJson from '../asserts/facilities.json';
+import eventsJson from '../asserts/events';
+import layersJson from '../asserts/layers';
+import facilitiesJson from '../asserts/facilities';
 
 async function facilities() {
     try {
-        const { data = [] } = await httpService.get('/gmw/api/facility/all');
+        // const { data = [] } = await httpService.get('/gmw/api/facility/all');
         return facilitiesJson;
     } catch (error) {
         return [];
@@ -21,7 +21,7 @@ async function events() {
 }
 async function layers() {
     try {
-        const { data = [] } = await httpService.get('/gmw/api/layer');
+        // const { data = [] } = await httpService.get('/gmw/api/layer');
         return layersJson;
     } catch (error) {
         return [];

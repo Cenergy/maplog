@@ -1,4 +1,4 @@
-[
+const facilities=[
    
     {
         "id": "406100110007",
@@ -765,3 +765,5 @@
         "longitude": 113.97876317331284
     }
 ]
+
+export default facilities
